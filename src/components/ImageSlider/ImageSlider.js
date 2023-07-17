@@ -20,7 +20,7 @@ const ImageSlider = ({ images }) => {
           interval={6000}
           className="slide-container"
         >
-          {images.urls?.map((slideImage, index) => (
+          {/* {images.urls?.map((slideImage, index) => (
             <Box key={index} sx={{ position: "relative", color: "#ffff", textAlign: "center" }}>
               <Image
                 src={slideImage}
@@ -28,7 +28,7 @@ const ImageSlider = ({ images }) => {
                 sx={{ width: "100%", maxHeight: "700px", objectFit: "cover" }}
               />
             </Box>
-          ))}
+          ))} */}
         </Carousel>
       </Box>
     </Container>
