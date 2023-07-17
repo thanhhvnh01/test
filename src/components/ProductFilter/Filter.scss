@@ -1,0 +1,179 @@
+.filter-section {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 7 !important;
+    top: 0;
+    right: 0;
+    background-color: #fff;
+    overflow-x: hidden;
+    transition: 0.1s;
+    display: block;
+    box-shadow: 3px 3px 20px rgba(0, 0, 0, 1);
+
+    .filter-header {
+        width: 30vw;
+        transition: 0.3s;
+        display: flex;
+        justify-content: space-between;
+        padding: 18px;
+        border-bottom: 1px solid #eceff1;
+
+        .text-bold {
+            font-weight: 600;
+            font-size: 20px;
+        }
+    }
+
+    .filter-body {
+        width: 30vw;
+
+        .text-bold {
+            font-weight: 600;
+            font-size: 14px;
+            padding: 18px;
+            padding-bottom: 0px;
+            text-transform: uppercase;
+        }
+
+        .accordion {
+            border: none !important;
+        }
+
+
+        .accordion__panel {
+            animation: none !important;
+            padding: 0px;
+
+            .filter-item {
+                border-bottom: 1px solid #eceff1;
+                cursor: pointer;
+                min-height: 57px;
+                max-height: 67px;
+                display: flex;
+                align-items: center;
+                text-transform: uppercase;
+                font-weight: 100 !important;
+                font-size: 14px;
+                padding-left: 18px;
+                width: 100%;
+
+                // margin-top: 0px;
+                &[aria-selected="true"] {
+                    border-left: 4px solid #000;
+                    @extend .filter-item
+                }
+
+            }
+        }
+
+        .accordion__button {
+            background-color: #fff;
+            display: flex;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #000;
+            font-size: 14px;
+            width: 100%;
+
+            &:after {
+                // padding: 2px;
+                display: flex;
+                content: '';
+                height: 10px;
+                width: 10px;
+                margin-top: 6px;
+                margin-left: auto;
+                border-bottom: 2px solid currentColor;
+                border-right: 2px solid currentColor;
+                transform: rotate(-45deg);
+                transition: .2s;
+            }
+
+            &[aria-expanded="true"]::after {
+                transform: rotate(45deg);
+                transition: .2s;
+            }
+
+            &:before {
+                display: none !important;
+            }
+        }
+
+
+    }
+
+
+}
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.202) !important;
+    display: none;
+    transition: 0.5s;
+    z-index: 4;
+  }
+
+.color-wrapper {
+    // height: auto;
+    // width: auto;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+
+    .color-container {
+        // padding: 5px;
+        height: 35px;
+        width: 35px;
+        border: 2px solid #eceff1;
+        border-radius: 7px;
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        transform: scale(0.9);
+
+        &[aria-selected="true"] {
+            border: 2px solid black;
+        }
+
+        .color {
+            display: flex;
+            border-radius: 5px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 25px;
+            height: 25px;
+        }
+    }
+}
+
+.applied-filter {
+    display: flex;
+    padding: 18px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eceff1;
+    flex-wrap: wrap;
+    .filter-tag {
+        height: 35px;
+        width: auto;
+        display: flex;
+        background-color: #f5f6f6;
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 3px;
+        padding-right: 5px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        span{
+            padding-bottom: 0px;
+            text-transform: capitalize;
+        }
+    }
+}

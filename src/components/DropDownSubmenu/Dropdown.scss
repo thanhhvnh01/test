@@ -1,0 +1,101 @@
+.dropdown-wrapper {
+    position: relative;
+    
+    .parent {
+        text-decoration: none;
+        // transition: 0.25s;
+        cursor: pointer;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .dropdown-content {
+        padding: 10px;
+        display: flex;
+        position: absolute;
+        justify-content: space-evenly;
+        min-width: 1320px;
+        right: 0;
+        left: -484px;
+        // margin-top: 15px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        top: 44px;
+        visibility: hidden;
+        transition: 0.15s;
+        overflow: hidden;
+        z-index: 10;
+        .parent {
+            font-weight: 700;
+            font-size: 17px;
+            // text-align: center;
+        }
+
+        .parent-container {
+            .child-wrapper {
+                display: flex;
+                justify-content: space-between;
+
+                overflow: hidden;
+
+                .container-2 {
+                    width: 0px;
+                    transition: .1s;
+                    color: #fff;
+                }
+
+                .child-item-1 {
+                    height: 30px;
+                    padding: 3px 8px 3px 0;
+                    text-decoration: none;
+                    // transition: 0.2s;
+                    cursor: pointer;
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+
+                .child-item-2 {
+                    width: 170px;
+                    height: 30px;
+                    padding: 3px;
+                    text-decoration: none;
+                    // transition: 0.2s;
+                    cursor: pointer;
+                    color: #fff;
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
+
+            &:hover {
+                .child-wrapper {
+                    // height: 300px;
+                    // grid-template-columns: repeat(2, 1fr);
+                    @extend .child-wrapper;
+
+                    .container-2 {
+                        width: 170px;
+                        color: #000;
+                    }
+                }
+
+                .child-item-2 {
+                    color: #000;
+                }
+            }
+        }
+
+
+    }
+
+    &:hover {
+        .dropdown-content {
+            // display: flex;
+            visibility: visible;
+            @extend .dropdown-content
+        }
+    }
+}
