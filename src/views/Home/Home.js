@@ -90,8 +90,10 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const hoverMouseLeft = () => { document.getElementById('main-dropdown').style.visibility = 'hidden' }
+
   return (
-    <>
+    <div onMouseEnter={()=>{hoverMouseLeft()}}>
       <ImageSlider images={slideImages} />
       <Container
         p={0}
@@ -105,7 +107,7 @@ const Home = () => {
         </Box>
       </Container>
       <Widget />
-    </>
+    </div>
   );
 };
 
