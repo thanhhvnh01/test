@@ -1,10 +1,11 @@
 .dropdown-wrapper {
     position: relative;
-    
+
     .parent {
         text-decoration: none;
         // transition: 0.25s;
         cursor: pointer;
+
         &:hover {
             text-decoration: underline;
         }
@@ -21,11 +22,12 @@
         // margin-top: 15px;
         background-color: #fff;
         border: 1px solid #ccc;
-        top: 44px;
+        margin-top: 16px;
         visibility: hidden;
         transition: 0.15s;
         overflow: hidden;
         z-index: 10;
+
         .parent {
             font-weight: 700;
             font-size: 17px;
@@ -36,7 +38,6 @@
             .child-wrapper {
                 display: flex;
                 justify-content: space-between;
-
                 overflow: hidden;
 
                 .container-2 {
@@ -51,6 +52,7 @@
                     text-decoration: none;
                     // transition: 0.2s;
                     cursor: pointer;
+
                     &:hover {
                         text-decoration: underline;
                     }
@@ -64,6 +66,7 @@
                     // transition: 0.2s;
                     cursor: pointer;
                     color: #fff;
+
                     &:hover {
                         text-decoration: underline;
                     }
@@ -94,6 +97,11 @@
     &:hover {
         .dropdown-content {
             // display: flex;
+            visibility: visible;
+            @extend .dropdown-content
+        }
+
+        #main-dropdown {
             visibility: visible;
             @extend .dropdown-content
         }

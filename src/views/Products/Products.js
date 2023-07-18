@@ -48,8 +48,12 @@ import Filter from "@components/ProductFilter/Filter";
 import { FaFilter } from 'react-icons/fa'
 
 import { filterData } from "./DataLua";
+import { useSelector } from "react-redux";
 
 const Products = () => {
+  // redux
+  const reduxState = useSelector((state) => state)
+  console.log(">>>", reduxState);
   // hooks
   const [isMobile] = useMobile();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -57,10 +61,6 @@ const Products = () => {
   const initLang = localStorage.getItem("language");
 
   const query = useLocation().search;
-  const categoryIdParam = new URLSearchParams(query).get("categoryId");
-  const productTypeId = new URLSearchParams(query).get("productTypeId");
-  const colorId = new URLSearchParams(query).get("color");
-  const bestSelling = new URLSearchParams(query).get("isBestSelling");
   // filter
   const [selectedProductType, setSelectedProductType] = useState(0);
   const [keyword, setKeyword] = useState("");
@@ -72,6 +72,7 @@ const Products = () => {
   const [orderBy] = useState("productName");
   const [orderByType, setOrderByType] = useState(OrderByTypeEnum.Asc);
   const [isLoading, setIsLoading] = useState(false);
+
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -85,94 +86,6 @@ const Products = () => {
     scrollToTop();
     document.getElementById("navbar").style.position = "absolute";
   }, []);
-
-  // form
-  const methods = useForm({
-    mode: "all",
-  });
-
-  const {
-    watch,
-    setValue,
-    formState: { isDirty },
-  } = methods;
-
-  const categoryId = watch("categoryId");
-  const productTypes = watch("productTypes");
-  const colors = watch("colors");
-  const isBestSelling = watch("isBestSelling");
-
-  useEffect(() => {
-    if (pageNumber !== 0) {
-      setPageNumber(0);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categoryId, productTypes]);
-
-  useEffect(() => {
-    if (!!productTypeId) {
-      setValue("productTypes", productTypeId);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productTypeId]);
-
-  // * get products
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const fetchProductData = useCallback(
-    debounce(async (pageSize, pageNumber, orderByType, orderBy, keyword, lang, data) => {
-      try {
-        setIsLoading(true);
-        const productRes = await getProductsAPI(pageSize, pageNumber, orderByType, orderBy, keyword, lang, data);
-        const pageCount = Math.round(productRes.data.paging.totalItem / 9);
-        setPageCount(pageCount);
-        setProducts(productRes.data.pageData);
-      } catch (error) {
-        toast({
-          title: "Api error",
-          description: getErrorMessage(error),
-          status: "error",
-          duration: 3000,
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    }, 400),
-    []
-  );
-
-  useEffect(() => {
-    fetchProductData(pageSize, pageNumber + 1, orderByType, orderBy, keyword, initLang, {
-      categoryId: !!categoryId ? Number(categoryId) : null,
-      productTypeId: !!productTypes ? Number(productTypes) : null,
-      colorId: !!colors ? Number(colors) : null,
-      isBestSelling: isBestSelling ? true : null,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageSize, pageNumber, keyword, categoryId, productTypes, colors, orderByType, orderBy, initLang, isBestSelling]);
-
-  useEffect(() => {
-    if (bestSelling === "true") {
-      setValue("isBestSelling", true);
-    } else {
-      setValue("isBestSelling", false);
-    }
-    setValue("categoryId", categoryIdParam);
-    setValue("colors", colorId);
-    // setSelectedProductType(productTypeId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categoryIdParam, productTypeId, bestSelling, colorId]);
-
-  // * actions
-  const handleKeywordChange = (e) => {
-    setKeyword(e.target.value);
-  };
-
-  const handleClearFilter = () => {
-    setValue("productTypes", null);
-    setValue("categoryId", null);
-    setValue("colors", null);
-    setValue("isBestSelling", false);
-  };
 
   const handleRequestSort = (e) => {
     e.preventDefault();
@@ -189,15 +102,17 @@ const Products = () => {
     // document.getElementById('toolbar').style.backgroundColor = "rgba(0, 0, 0, 0.202)"
   }
 
-  console.log("this ", selectedProductType);
+  const hoverMouseLeft = () => { document.getElementById('main-dropdown').style.visibility = 'hidden' }
+
   return (
     <>
 
       <Container
+        onMouseEnter={() => { hoverMouseLeft() }}
         bg="#ffff"
         p={isMobile ? 0 : 2}
-        maxW={isMobile ? "100%" : "1320px"}
-        mt={[0, "100px", "100px", "100px", "100px"]}
+        maxW={isMobile ? "100%" : "1400px"}
+        mt={[0, "50px", "50px", "50px", "50px"]}
         sx={{
           mb: "20px",
           minHeight: "90vh !important",
@@ -225,13 +140,12 @@ const Products = () => {
             </Breadcrumb>
           </Box>
         )} */}
+        <Box className="product-title">{reduxState && `${reduxState.reducer.selectedFilter.parent} - ${reduxState.reducer.selectedFilter.child}`}</Box>
         <div className="toolbar" id="toolbar">
-
-
           <Tabs index={selectedProductType} defaultIndex={0} onChange={(e) => { setSelectedProductType(e) }}>
             <TabList>
               {
-                filterData.map((i) => {
+                reduxState.reducer.childItem?.map((i) => {
                   return (
                     <Tab
                       className="had-dropdown"
@@ -248,142 +162,92 @@ const Products = () => {
           </Tabs>
           <button onClick={() => { handleOpenFilter() }} className="btn-filter">Filter & Sort <FaFilter style={{ marginTop: "4px", marginLeft: "2px" }} /></button>
         </div>
-        <FormProvider methods={methods}>
-          <Box className="product-main" mt={0}>
-            {!isMobile ? (
-              <>
-                <ProductSection
-                  pageCount={pageCount}
-                  categoryId={categoryId}
-                  keyword={keyword}
-                  pageSize={pageSize}
-                  pageNumber={pageNumber}
-                  handleRequestSort={handleRequestSort}
-                  data={products}
-                  handlePageChange={handlePageChange}
-                  handleKeywordChange={handleKeywordChange}
-                  isLoading={isLoading}
-                />
 
-              </>
-            ) : (
-              <>
-                <Flex justifyContent="space-between">
-                  <HStack fontWeight="bold">
-                    <HStack>
-                      <BsFilterLeft style={{ height: "19px", width: "19px" }} />
-                      <Text>
-                        <FormattedMessage id="label.sort" />:
-                      </Text>
-                    </HStack>
-                    <Select
-                      onChange={(e) => {
-                        handleRequestSort(e);
-                      }}
-                      variant="unstyled"
-                      borderColor="#ffff"
-                      fontWeight="bold"
-                      textColor="#d4af37"
-                    >
-                      <option value={OrderByTypeEnum.Asc} style={{ fontWeight: "bold" }}>
-                        A-Z
-                      </option>
-                      <option value={OrderByTypeEnum.Desc} style={{ fontWeight: "bold" }}>
-                        Z-A
-                      </option>
-                    </Select>
-                  </HStack>
+        <Box className="product-main" mt={0}>
+          {!isMobile ? (
+            <>
+              <ProductSection
+                pageCount={pageCount}
+                keyword={keyword}
+                pageSize={pageSize}
+                pageNumber={pageNumber}
+                handleRequestSort={handleRequestSort}
+                data={products}
+                handlePageChange={handlePageChange}
+                isLoading={isLoading}
+              />
+
+            </>
+          ) : (
+            <>
+              <Flex justifyContent="space-between">
+                <HStack fontWeight="bold">
                   <HStack>
-                    <Text fontWeight="bold" color="#FFB800">
-                      {products.length}
+                    <BsFilterLeft style={{ height: "19px", width: "19px" }} />
+                    <Text>
+                      <FormattedMessage id="label.sort" />:
                     </Text>
-                    <Text fontWeight="bold">items</Text>
                   </HStack>
+                  <Select
+                    onChange={(e) => {
+                      handleRequestSort(e);
+                    }}
+                    variant="unstyled"
+                    borderColor="#ffff"
+                    fontWeight="bold"
+                    textColor="#d4af37"
+                  >
+                    <option value={OrderByTypeEnum.Asc} style={{ fontWeight: "bold" }}>
+                      A-Z
+                    </option>
+                    <option value={OrderByTypeEnum.Desc} style={{ fontWeight: "bold" }}>
+                      Z-A
+                    </option>
+                  </Select>
+                </HStack>
+                <HStack>
+                  <Text fontWeight="bold" color="#FFB800">
+                    {products.length}
+                  </Text>
+                  <Text fontWeight="bold">items</Text>
+                </HStack>
 
-                  <HStack onClick={onOpen}>
-                    <BsFilter style={{ height: "19px", width: "19px" }} />
-                    <Text fontWeight="bold">Filter</Text>
-                  </HStack>
-                </Flex>
-                <ProductSection
-                  isMobile={isMobile}
-                  pageCount={pageCount}
-                  categoryId={categoryId}
-                  keyword={keyword}
-                  pageSize={pageSize}
-                  pageNumber={pageNumber}
-                  handleRequestSort={handleRequestSort}
-                  data={products}
-                  handlePageChange={handlePageChange}
-                  handleKeywordChange={handleKeywordChange}
-                />
-              </>
-            )}
-          </Box>
-
-          {isOpen && (
-            <MobileProductFilter
-              isOpen={isOpen}
-              onClose={onClose}
-              productTypeId={productTypes}
-              colorId={colors}
-              isBestSelling={isBestSelling}
-              categoryId={categoryId}
-              selectedProductType={selectedProductType}
-              setValue={setValue}
-              handleClearFilter={handleClearFilter}
-            />
+                <HStack onClick={onOpen}>
+                  <BsFilter style={{ height: "19px", width: "19px" }} />
+                  <Text fontWeight="bold">Filter</Text>
+                </HStack>
+              </Flex>
+              <ProductSection
+                isMobile={isMobile}
+                pageCount={pageCount}
+                keyword={keyword}
+                pageSize={pageSize}
+                pageNumber={pageNumber}
+                handleRequestSort={handleRequestSort}
+                data={products}
+                handlePageChange={handlePageChange}
+              />
+            </>
           )}
-        </FormProvider>
-        
+        </Box>
+
+        {isOpen && (
+          <MobileProductFilter
+            isOpen={isOpen}
+            onClose={onClose}
+            selectedProductType={selectedProductType}
+          />
+        )}
       </Container>
       <Filter />
     </>
   );
 };
 
-const FilterSection = ({ categoryId, productTypeId, colorId, isBestSelling, setValue, handleClearFilter }) => {
-  return (
-    <VStack>
-      <Flex sx={{ width: "100%" }} justifyContent="space-between">
-        <HStack fontSize={["16px", "13px", "13px", "16px", "16px"]}>
-          <BsFilter style={{ height: "19px", width: "19px" }} />
-          <FormattedMessage id="label.filter" />
-        </HStack>
-        <Button
-          onClick={handleClearFilter}
-          fontWeight="500"
-          textTransform="none"
-          variant="solid"
-          fontSize={["16px", "12px", "12px", "14px", "14px"]}
-          rightIcon={<SmallCloseIcon />}
-          p={3}
-          bg="#d4af37"
-          h="23px"
-        >
-          <FormattedMessage id="button.clearFilter" />
-        </Button>
-      </Flex>
-      <Box sx={{ width: "100%" }}>
-        <ProductFilter
-          productTypeId={productTypeId}
-          colorId={colorId}
-          isBestSelling={isBestSelling}
-          setValue={setValue}
-          categoryId={categoryId}
-        />
-      </Box>
-    </VStack>
-  );
-};
+
 
 const ProductSection = ({
-  data,
-  handleRequestSort,
   handlePageChange,
-  handleKeywordChange,
-  keyword,
-  isLoading,
   pageCount,
   pageNumber,
   isMobile,

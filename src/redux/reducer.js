@@ -9,22 +9,17 @@ const initState = {
 const reducer = (state = initState, action) => {
   switch (action.type) {
     case ACTION_TYPES.SET_CATEGORY:
-      let childData = {
-        id: action.data.child.id,
-        label: action.data.child.label
-      }
+      console.log(">>>action",action);
       return {
         ...state,
-        parentCategory: action.parentId,
-        childCategory: action.childId,
-        childItem: childData
+        parentCategory: action.data.parentId,
+        childCategory: action.data.childId,
+        childItem: action.data.childItem,
+        selectedFilter: action.data.selectedFilter
       }
-
     default:
       return state
-
   }
-
 };
 
 export default reducer;

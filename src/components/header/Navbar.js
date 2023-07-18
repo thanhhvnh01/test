@@ -37,7 +37,7 @@ const NavBarContainer = ({ children, isMobile, ...props }) => {
         wrap="wrap"
         h={ResponsiveNavbarHeight}
         p={2}
-        maxW="1320px"
+        maxW="1400px"
         sx={{ ml: "auto", mr: "auto" }}
         color="#000"
         {...props}
@@ -75,7 +75,7 @@ const Navbar = ({ ...props }) => {
         }
       }
       else {
-        document.getElementById("navbar").style.top = "-120px";
+        document.getElementById("navbar").style.top = "-60px";
       }
       prevScrollpos = currentScrollPos;
     }

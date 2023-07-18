@@ -7,6 +7,7 @@ import 'react-accessible-accordion/dist/fancy-example.css';
 import { Grid, VStack } from '@chakra-ui/react';
 import ColorCard from './ColorCard';
 import { useLocation, useNavigate } from 'react-router-dom';
+import CustomCheckbox from './CustomCheckbox';
 
 // const fakeDataColor = [
 //     {
@@ -15,25 +16,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 // ]
 
 const Filter = () => {
-    const filterRef = useRef()
     const [sortBy, setSortBy] = useState()
     const [colors, setColors] = useState([])
-    const [texture, setTexture] = useState()
+    const [texture, setTexture] = useState([])
     const [material, setMaterial] = useState()
     const query = useLocation().search;
     // const sortBy = new URLSearchParams(query).get("sort-by");
     // const categoryIdParam = new URLSearchParams(query).get("category");
     // const texture = new URLSearchParams(query).get("texture");
     // const colorId = new URLSearchParams(query).get("color");
-    const navigate = useNavigate()
-
-    // useEffect(() => {
-    //     const formData = {
-    //         sortBy: sortBy
-    //     }
-    //     setSelectedOptions()
-
-    // }, [sortBy])
 
     const handleCloseFilter = () => {
         document.getElementById('filter').style.width = "0"
@@ -56,8 +47,17 @@ const Filter = () => {
         setSortBy(element)
     }
 
-    const handleColorFilter = (e, value) => {
+    const handleTextureFilter = (e, value) => {
+        if (e.target.ariaSelected === "true") {
+            setTexture(texture.filter((i) => i.value !== value.value))
+            e.target.setAttribute('aria-selected', 'false')
+        } else {
+            e.target.setAttribute('aria-selected', 'true')
+            setTexture(texture.concat(value))
+        }
+    }
 
+    const handleColorFilter = (e, value) => {
         if (e.target.ariaSelected === "true") {
             setColors(colors.filter((item) =>
                 item !== value
@@ -88,14 +88,29 @@ const Filter = () => {
                 item !== value
             ))
         }
+        if (type === "texture") {
+            const eleTexture = document.querySelectorAll(".checkbox-custom");
+            eleTexture.forEach((e) => {
+                console.log(e.id, `checkbox-${value.value}`);
+                if (`checkbox-${value.value}` === e.id) {
+                    console.log("run");
+                    e.setAttribute('aria-selected', 'false')
+                }
+            })
+            setTexture(texture.filter((i) =>
+                i !== value
+            ))
+        }
     }
+
+    console.log(texture);
 
     return (
         <>
             <div onClick={() => { handleCloseFilter() }} id="backdrop" className='backdrop'>
             </div>
             <div id="filter" className='filter-section'>
-                <div ref={filterRef} className='filter-header'>
+                <div className='filter-header'>
                     <div className='text-bold'>
                         Filter & Sort
                     </div>
@@ -109,7 +124,12 @@ const Filter = () => {
                     <div className='text-bold'>
                         Applied filters
                     </div>
-                    <AppliedFilter sortBy={sortBy} colors={colors} handleRemoveFilter={handleRemoveFilter} />
+                    <AppliedFilter
+                        sortBy={sortBy}
+                        colors={colors}
+                        texture={texture}
+                        handleRemoveFilter={handleRemoveFilter}
+                    />
 
                     <Accordion allowZeroExpanded={true}>
                         <AccordionItem>
@@ -143,9 +163,13 @@ const Filter = () => {
                                 </AccordionItemButton>
                             </AccordionItemHeading>
                             <AccordionItemPanel>
-                                <p>
-                                    Body Wavy
-                                </p>
+                                <VStack alignItems="flex-start" spacing={0}>
+                                    <CustomCheckbox onClick={handleTextureFilter} label="Curly Hair" value={1} />
+                                    <CustomCheckbox onClick={handleTextureFilter} label="Body wavy" value={2} />
+                                    <CustomCheckbox onClick={handleTextureFilter} label="Wavy wavy" value={3} />
+                                    <CustomCheckbox onClick={handleTextureFilter} label="Curly slightly" value={4} />
+                                    <CustomCheckbox onClick={handleTextureFilter} label="Curly hard" value={5} />
+                                </VStack>
                             </AccordionItemPanel>
                         </AccordionItem>
 
@@ -186,6 +210,11 @@ const Filter = () => {
 
                     </Accordion>
                 </div>
+                <div className='filter-action'>
+
+                    <button className='btn-apply'>Apply</button>
+
+                </div>
             </div>
         </>
     )
@@ -193,14 +222,14 @@ const Filter = () => {
 
 export default Filter
 
-const AppliedFilter = ({ sortBy, colors, handleRemoveFilter }) => {
+const AppliedFilter = ({ sortBy, colors, handleRemoveFilter, texture }) => {
 
-    const FilterTag = ({ value, onRemove }) => {
+    const FilterTag = ({ value, label, onRemove }) => {
         return (
             <div className='filter-tag'>
                 <MdClose size={20} onClick={() => { onRemove() }} />
                 <span >
-                    {value}
+                    {label ? label : value}
                 </span>
             </div>
         )
@@ -210,10 +239,15 @@ const AppliedFilter = ({ sortBy, colors, handleRemoveFilter }) => {
             {sortBy ? <div>
                 <FilterTag value={sortBy} onRemove={() => { handleRemoveFilter("sort") }} />
             </div> : <div></div>}
-
-            {colors ? colors.map((i) => (
-                <FilterTag key={i} value={i} onRemove={() => { handleRemoveFilter("color", i) }} />
-            )) : <div></div>}
-        </div>
+            {texture ? texture.map((i) => (
+                <FilterTag value={i.value} label={i.label} onRemove={() => { handleRemoveFilter("texture", i) }} ></FilterTag>
+            )) : <div></div>
+            }
+            {
+                colors ? colors.map((i) => (
+                    <FilterTag key={i} value={i} onRemove={() => { handleRemoveFilter("color", i) }} />
+                )) : <div></div>
+            }
+        </div >
     )
 }

@@ -66,7 +66,7 @@ const NavbarItems = ({ isOpen, dropDownData }) => {
                 >
                   <FormattedMessage id="title.products" />
                 </Text>
-                <TriangleDownIcon w="12px" sx={{ mt: "2px !important" }} />
+                
               </HStack>
             </Flex>
           }
@@ -85,7 +85,7 @@ const NavbarItems = ({ isOpen, dropDownData }) => {
           fontWeight="600"
           textTransform="uppercase"
           display="block"
-          sx={{ border: "2px solid #000 !important", p: 1, px: 4, cursor: "pointer" }}
+          sx={{  cursor: "pointer" }}
         >
           <FormattedMessage id="title.subscribe" />
         </Flex>

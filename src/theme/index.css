@@ -1,5 +1,17 @@
+@import url(https://db.onlinewebfonts.com/c/c0cd6ec8ce6d2bbd315a13b62ed13550?family=AdihausDIN);
+
+@font-face {
+  font-family: "AdihausDIN";
+  src: url("https://db.onlinewebfonts.com/t/c0cd6ec8ce6d2bbd315a13b62ed13550.eot");
+  src: url("https://db.onlinewebfonts.com/t/c0cd6ec8ce6d2bbd315a13b62ed13550.eot?#iefix")format("embedded-opentype"),
+  url("https://db.onlinewebfonts.com/t/c0cd6ec8ce6d2bbd315a13b62ed13550.woff2")format("woff2"),
+  url("https://db.onlinewebfonts.com/t/c0cd6ec8ce6d2bbd315a13b62ed13550.woff")format("woff"),
+  url("https://db.onlinewebfonts.com/t/c0cd6ec8ce6d2bbd315a13b62ed13550.ttf")format("truetype"),
+  url("https://db.onlinewebfonts.com/t/c0cd6ec8ce6d2bbd315a13b62ed13550.svg#AdihausDIN")format("svg");
+}
+
 body {
-  font-family: "Open Sans", sans-serif !important;
+  font-family: "AdihausDIN", sans-serif !important;
 }
 
 option {

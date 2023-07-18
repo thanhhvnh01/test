@@ -7,7 +7,6 @@ import "react-whatsapp-chat-widget/index.css";
 import LocaleHeader from "./header/LocaleHeader";
 import useMobile from "@hooks/useMobile";
 import NavbarM from "./header/NavbarM";
-import Filter from "./ProductFilter/Filter";
 // icon
 
 const MainLayout = () => {
@@ -17,7 +16,7 @@ const MainLayout = () => {
       <LocaleHeader isMobile={isMobile} />
       {isMobile ? <NavbarM /> : <Navbar />}
       <Outlet />
-      <Footer />      
+      <Footer />
     </>
   );
 };

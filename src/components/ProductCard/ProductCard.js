@@ -8,7 +8,7 @@ const fakeData = {
   subtitle: "Curly hair",
   images: ['/images/about_us_picture.png', '/images/about_us_picture.png', '/images/about_us_picture.png', '/images/about_us_picture.png'],
   thumbImage: '/images/about_us_picture.png',
-  price: '$20.00',
+  price: '$25.00',
 }
 
 const ProductCard = ({ title, subtitle, thumbImage, images, sx, onClick, isBestSelling }) => {
@@ -24,7 +24,7 @@ const ProductCard = ({ title, subtitle, thumbImage, images, sx, onClick, isBestS
       bg="#ffff"
       tabIndex={0}
       w={["175px", "182px", "182px", "97%", "99%"]}
-      h={["280px", "290px", "290px", "390px", "390px"]}
+      h={["280px", "290px", "290px", "410px", "410px"]}
       sx={{ ...sx, cursor: "pointer" }}
       onMouseEnter={() => {
         setIsHover(true);
